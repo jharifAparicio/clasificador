@@ -1,0 +1,32 @@
+[project]
+name = "clasificador"
+version = "0.1.0"
+description = "Clasificador con YOLOv8m-seg en GPU (CUDA) y UDP"
+readme = "README.md"
+authors = [
+    { name = "jharif Nelson Aparicio Casillas", email = "jharifnelsona@gmail.com" },
+]
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "torch>=2.2.0",
+    "torchvision>=0.17.0",
+    "ultralytics>=8.3.0",
+    "numpy>=1.26.4",
+    "opencv-python>=4.10.0.84",
+]
+
+[project.scripts]
+clasificador = "clasificador:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu121" }
+torchvision = { index = "pytorch-cu121" }

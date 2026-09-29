@@ -1,0 +1,30 @@
+services:
+  clasificador-vision:
+    build: .
+    container_name: clasificador_vision_gpu
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - VIDEO_URL=http://192.168.100.160:4747/video
+      - ESP32_IP=127.0.0.1
+      - ESP32_PORT=8888
+      # Protocolo de comunicación: 'udp' o 'http' (cambia aquí en 1 sola línea)
+      - COMM_PROTOCOL=udp # http
+      - HTTP_ENDPOINT=/clasificar
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - PYTHONPATH=/app/src
+    volumes:
+      # Montaje del código en caliente: cualquier cambio en local se refleja de inmediato
+      - ./src:/app/src
+      - ./main.py:/app/main.py
+      # Compartir servidor gráfico X11 para la ventana OpenCV
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
